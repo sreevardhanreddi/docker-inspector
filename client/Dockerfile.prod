@@ -1,0 +1,30 @@
+FROM ubuntu:18.04 as build
+
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils gcc g++ make
+RUN apt-get upgrade -y
+RUN apt-get autoremove -y
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+# Install NodeJS
+RUN apt-get -y install curl software-properties-common
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get update -y
+RUN apt-get install -y nodejs gcc g++ make
+RUN node --version
+RUN npm install node-sass
+RUN npm install -g yarn
+
+
+RUN mkdir /app
+WORKDIR /app
+COPY ./package.json /tmp/package.json
+RUN cp /tmp/package.json /app/package.json
+RUN npm install
+COPY . /app
+RUN npm run build
+
+FROM nginx:1.17-alpine
+COPY ./nginx.prod.conf /etc/nginx/nginx.conf
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 9081
+CMD ["nginx", "-g", "daemon off;"]

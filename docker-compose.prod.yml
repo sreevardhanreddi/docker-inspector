@@ -1,0 +1,53 @@
+version: "3.7"
+
+services:
+  proxy:
+    container_name: di-prod-proxy
+    build:
+      context: proxy/.
+      dockerfile: Dockerfile.prod
+    ports:
+      - 80:80
+    restart: on-failure:10
+
+  api:
+    container_name: di-prod-api
+    build:
+      context: server/.
+      dockerfile: Dockerfile.prod
+    ports:
+      - 8000:80
+    volumes:
+      - ./server:/app
+      - /var/run/docker:/var/run/docker
+    stdin_open: true
+    tty: true
+    depends_on:
+      - database
+    env_file:
+      - .env
+    restart: on-failure:10
+
+  database:
+    container_name: di-prod-db
+    build: database/.
+    volumes:
+      - ./database/db_data:/var/lib/postgresql
+    env_file:
+      - .env
+    restart: on-failure:10
+
+  client:
+    container_name: di-prod-ui
+    build:
+      context: client/.
+      dockerfile: Dockerfile.prod
+    stdin_open: true
+    volumes:
+      - ./client:/app
+      - ./client/node_modules:/app/node_modules
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    restart: on-failure:10

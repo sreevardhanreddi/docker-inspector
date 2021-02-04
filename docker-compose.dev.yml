@@ -1,0 +1,59 @@
+version: "3.7"
+
+services:
+  proxy:
+    container_name: di-dev-proxy
+    build:
+      context: proxy/.
+      dockerfile: Dockerfile.dev
+    ports:
+      - 80:80
+    restart: on-failure:3
+
+  api:
+    container_name: di-dev-api
+    build:
+      context: server/.
+      dockerfile: Dockerfile.dev
+    ports:
+      - 8000:80
+    volumes:
+      - ./server:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    stdin_open: true
+    tty: true
+    depends_on:
+      - database
+    env_file:
+      - .env
+    restart: on-failure:3
+
+  database:
+    container_name: di-dev-db
+    build: database/.
+    volumes:
+      - ./database/db_data:/var/lib/postgresql
+    env_file:
+      - .env
+    restart: on-failure:3
+
+  client:
+    container_name: di-dev-ui
+    build:
+      context: client/.
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    volumes:
+      - ./client:/app
+      - ./client/node_modules:/app/node_modules
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    environment:
+      - NODE_PATH=./src
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - COMPOSE_CONVERT_WINDOWS_PATHS=1
+    restart: on-failure:3

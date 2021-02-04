@@ -1,0 +1,17 @@
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
+
+WORKDIR /app
+
+COPY . .
+
+RUN apt-get update
+
+RUN apt install -y netcat
+
+RUN pip3 install -r /app/requirements.txt
+
+RUN chmod +X start-dev.sh
+
+EXPOSE 8000
+
+CMD ["/bin/sh","./start-dev.sh"]

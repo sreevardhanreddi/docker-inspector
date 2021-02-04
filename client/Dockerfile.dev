@@ -1,0 +1,13 @@
+FROM node:14-alpine
+
+RUN mkdir /app
+
+WORKDIR /app
+
+EXPOSE 3000
+
+COPY /package.json /tmp/package.json
+
+RUN cp /tmp/package.json /app/package.json
+
+ENTRYPOINT npm install && npm start
