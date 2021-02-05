@@ -10,6 +10,7 @@ from fastapi import (
 )
 from fastapi.middleware.cors import CORSMiddleware
 from api.docker.views import docker_router
+from api.auth.views import auth_router
 
 
 app = FastAPI(root_path="/api")
@@ -28,4 +29,5 @@ def read_main(request: Request):
     return {"message": "Hello World", "root_path": request.scope.get("root_path")}
 
 
+app.include_router(auth_router, prefix="/auth", tags=["user auth"])
 app.include_router(docker_router, prefix="/docker", tags=["docker containers"])

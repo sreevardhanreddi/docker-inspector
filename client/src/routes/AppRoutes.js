@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 
 import { Switch, Route } from "react-router-dom";
 import CenterLoadingSpinner from "../components/CenterLoadingSpinner/CenterLoadingSpinner";
+import LoginPage from "../pages/Auth/LoginPage";
 import ContainerListPage from "../pages/Containers/ContainerListPage";
 
 const AppRoutes = () => {
@@ -11,10 +12,15 @@ const AppRoutes = () => {
         <Switch>
           <Route
             exact
-            path="/"
+            path="/containers"
             render={(props) => <ContainerListPage {...props} />}
           />
-          <Route component={<ContainerListPage />} />
+          <Route
+            exact
+            path="/login"
+            render={(props) => <LoginPage {...props} />}
+          />
+          <Route render={(props) => <ContainerListPage {...props} />} />
         </Switch>
       </Suspense>
     </>
