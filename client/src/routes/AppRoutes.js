@@ -3,6 +3,7 @@ import React, { lazy, Suspense } from "react";
 import { Switch, Route } from "react-router-dom";
 import CenterLoadingSpinner from "../components/CenterLoadingSpinner/CenterLoadingSpinner";
 import LoginPage from "../pages/Auth/LoginPage";
+import ContainerDetailPage from "../pages/ContainerDetail/ContainerDetailPage";
 import ContainerListPage from "../pages/Containers/ContainerListPage";
 
 const AppRoutes = () => {
@@ -14,6 +15,11 @@ const AppRoutes = () => {
             exact
             path="/containers"
             render={(props) => <ContainerListPage {...props} />}
+          />
+          <Route
+            exact
+            path="/containers/:containerName"
+            render={(props) => <ContainerDetailPage {...props} />}
           />
           <Route
             exact

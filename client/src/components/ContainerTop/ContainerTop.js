@@ -2,20 +2,22 @@ import React, { useState, useEffect } from "react";
 import { authAxios } from "../../utils/axiosUtils";
 import CenterLoadingSpinner from "../CenterLoadingSpinner/CenterLoadingSpinner";
 import MUIDataTable from "mui-datatables";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
-const Containers = () => {
+const ContainerTop = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [containers, setContainers] = useState([]);
+  const [container, setContainer] = useState({});
 
   const history = useHistory();
+  const params = useParams();
 
   useEffect(() => {
     setIsLoading(true);
     authAxios
-      .get("/docker/containers/")
+      .get(`/docker/containers/${params.containerName}`)
       .then((res) => {
-        setContainers(res.data);
+        debugger;
+        setContainer(res.data);
       })
       .catch((e) => {})
       .finally(() => {
@@ -84,20 +86,25 @@ const Containers = () => {
     // resizableColumns: true,
   };
 
+  debugger;
+
   return (
     <>
       {isLoading ? (
         <CenterLoadingSpinner />
       ) : (
-        <MUIDataTable
-          title={"Docker Containers"}
-          data={containers}
-          columns={columns}
-          options={options}
-        />
+        <>
+          <p>{JSON.stringify(container)}</p>
+          <MUIDataTable
+            title={"Docker Containers"}
+            data={[]}
+            columns={columns}
+            options={options}
+          />
+        </>
       )}
     </>
   );
 };
 
-export default Containers;
+export default ContainerTop;
