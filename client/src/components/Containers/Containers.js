@@ -10,7 +10,7 @@ const Containers = () => {
 
   const history = useHistory();
 
-  useEffect(() => {
+  const getContainers = () => {
     setIsLoading(true);
     authAxios
       .get("/docker/containers/")
@@ -21,6 +21,10 @@ const Containers = () => {
       .finally(() => {
         setIsLoading(false);
       });
+  };
+
+  useEffect(() => {
+    getContainers();
     return () => {};
   }, []);
 
@@ -38,7 +42,7 @@ const Containers = () => {
       label: "Image",
       options: {
         filter: true,
-        sort: false,
+        sort: true,
       },
     },
     {
@@ -46,7 +50,7 @@ const Containers = () => {
       label: "Name",
       options: {
         filter: true,
-        sort: false,
+        sort: true,
       },
     },
     {
@@ -54,7 +58,7 @@ const Containers = () => {
       label: "Ports",
       options: {
         filter: true,
-        sort: false,
+        sort: true,
       },
     },
     {
@@ -62,7 +66,7 @@ const Containers = () => {
       label: "Status",
       options: {
         filter: true,
-        sort: false,
+        sort: true,
       },
     },
   ];
@@ -79,7 +83,7 @@ const Containers = () => {
 
     selectableRows: "none",
     onRowClick: (dataIndex, rowIndex) => {
-      history.push(`/containers/${dataIndex[2]}`);
+      history.push(`/containers/${dataIndex[2]}/`);
     },
     // resizableColumns: true,
   };

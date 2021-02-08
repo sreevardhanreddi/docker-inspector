@@ -12,3 +12,7 @@
   color: white;
   text-decoration: none;
 }
+
+.react-json-view {
+  word-break: break-all;
+}

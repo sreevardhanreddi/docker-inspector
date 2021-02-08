@@ -28,7 +28,7 @@ class DockerContainerParser(object):
 
     def parse_container(self, container):
         data = {}
-        data["id"] = container.id
+        data["container_id"] = container.id
         # data["short_id"] = container.short_id
         data["id"] = container.short_id
         data["status"] = container.status
@@ -42,5 +42,14 @@ class DockerContainerParser(object):
         data = []
         for container in containers:
             data.append(self.parse_container(container))
+
+        return data
+
+    def get_container_top_processes(self, container):
+        data = []
+        top = container.top()
+        processes, titles = top["Processes"], top["Titles"]
+        for proc in processes:
+            data.append(dict(zip(titles, proc)))
 
         return data

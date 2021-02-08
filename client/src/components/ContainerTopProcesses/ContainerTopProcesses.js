@@ -3,68 +3,96 @@ import { authAxios } from "../../utils/axiosUtils";
 import CenterLoadingSpinner from "../CenterLoadingSpinner/CenterLoadingSpinner";
 import MUIDataTable from "mui-datatables";
 import { useHistory, useParams } from "react-router-dom";
+import { CircularProgress } from "@material-ui/core";
 
 const ContainerTop = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [container, setContainer] = useState({});
+  const [containerTop, setContainerTop] = useState([]);
 
   const history = useHistory();
   const params = useParams();
 
-  useEffect(() => {
+  const getContainerTop = () => {
     setIsLoading(true);
     authAxios
-      .get(`/docker/containers/${params.containerName}`)
+      .get(`/docker/containers/top/${params.containerName}/`)
       .then((res) => {
-        debugger;
-        setContainer(res.data);
+        setContainerTop(res.data);
       })
       .catch((e) => {})
       .finally(() => {
         setIsLoading(false);
       });
+  };
+
+  useEffect(() => {
+    getContainerTop();
     return () => {};
   }, []);
 
   const columns = [
     {
-      name: "id",
-      label: "id",
+      name: "UID",
+      label: "UID",
       options: {
         filter: true,
         sort: true,
       },
     },
     {
-      name: "image",
-      label: "Image",
+      name: "PID",
+      label: "PID",
       options: {
         filter: true,
-        sort: false,
+        sort: true,
       },
     },
     {
-      name: "name",
-      label: "Name",
+      name: "PPID",
+      label: "PPID",
       options: {
         filter: true,
-        sort: false,
+        sort: true,
       },
     },
     {
-      name: "ports",
-      label: "Ports",
+      name: "C",
+      label: "C",
       options: {
         filter: true,
-        sort: false,
+        sort: true,
       },
     },
     {
-      name: "status",
-      label: "Status",
+      name: "STIME",
+      label: "STIME",
       options: {
         filter: true,
-        sort: false,
+        sort: true,
+      },
+    },
+    {
+      name: "TTY",
+      label: "TTY",
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: "TIME",
+      label: "TIME",
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: "CMD",
+      label: "CMD",
+      options: {
+        filter: true,
+        sort: true,
       },
     },
   ];
@@ -80,24 +108,19 @@ const ContainerTop = () => {
     selectableRowsHeader: false,
 
     selectableRows: "none",
-    onRowClick: (dataIndex, rowIndex) => {
-      history.push(`/containers/${dataIndex[2]}`);
-    },
     // resizableColumns: true,
   };
-
-  debugger;
 
   return (
     <>
       {isLoading ? (
-        <CenterLoadingSpinner />
+        <CircularProgress />
       ) : (
         <>
-          <p>{JSON.stringify(container)}</p>
+          {/* <p>{JSON.stringify(containerTop)}</p> */}
           <MUIDataTable
-            title={"Docker Containers"}
-            data={[]}
+            title={"Container Top Processes"}
+            data={containerTop}
             columns={columns}
             options={options}
           />

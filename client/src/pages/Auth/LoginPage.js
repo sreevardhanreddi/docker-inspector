@@ -61,7 +61,7 @@ const LoginPage = () => {
         let data = res.data;
         localStorage.setItem("access_token", data.access_token);
         authContext.setUserDetails(res.data);
-        history.push("/containers");
+        history.push("/containers/");
       })
       .catch((e) => {
         setIsLoading(false);

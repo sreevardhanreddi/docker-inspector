@@ -7,7 +7,7 @@ services:
       context: proxy/.
       dockerfile: Dockerfile.dev
     ports:
-      - 80:80
+      - 99:80
     restart: on-failure:3
 
   api:

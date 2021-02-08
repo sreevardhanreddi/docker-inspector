@@ -129,7 +129,13 @@ const Navbar = (props) => {
             <MenuIcon style={{ color: "white" }} />
           </IconButton>
           <div style={{ display: "flex" }}>
-            <Typography variant="h6" className={classes.titleCenter}>
+            <Typography
+              variant="h6"
+              className={classes.titleCenter}
+              onClick={() => {
+                history.push("/containers/");
+              }}
+            >
               Docker Inspector
             </Typography>
           </div>
@@ -176,7 +182,7 @@ const Navbar = (props) => {
                     <ListItem
                       button
                       onClick={(e) => {
-                        history.push("/settings");
+                        history.push("/settings/");
                       }}
                     >
                       <ListItemIcon>
@@ -211,7 +217,13 @@ const Navbar = (props) => {
     return (
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+          <Typography
+            variant="h6"
+            className={classes.title}
+            onClick={() => {
+              history.push("/containers/");
+            }}
+          >
             &nbsp;Docker Inspector
           </Typography>
           {authContext.isAuthenticated ? (
@@ -250,7 +262,7 @@ const Navbar = (props) => {
                   <MenuItem
                     onClick={() => {
                       popupStateForAccount.close();
-                      history.push("/settings");
+                      history.push("/settings/");
                     }}
                   >
                     Settings

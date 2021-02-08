@@ -36,7 +36,7 @@ const App = () => {
         authContext.setUserDetails(user);
       } else {
         setIsLoading(false);
-        history.push("/login");
+        history.push("/login/");
       }
     });
     return () => {};

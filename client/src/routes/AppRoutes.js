@@ -13,17 +13,17 @@ const AppRoutes = () => {
         <Switch>
           <Route
             exact
-            path="/containers"
+            path="/containers/"
             render={(props) => <ContainerListPage {...props} />}
           />
           <Route
             exact
-            path="/containers/:containerName"
+            path="/containers/:containerName/"
             render={(props) => <ContainerDetailPage {...props} />}
           />
           <Route
             exact
-            path="/login"
+            path="/login/"
             render={(props) => <LoginPage {...props} />}
           />
           <Route render={(props) => <ContainerListPage {...props} />} />
