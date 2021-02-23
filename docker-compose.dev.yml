@@ -16,7 +16,26 @@ services:
       context: server/.
       dockerfile: Dockerfile.dev
     ports:
-      - 8000:80
+      - 8001:80
+    volumes:
+      - ./server:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    stdin_open: true
+    tty: true
+    depends_on:
+      - database
+    env_file:
+      - .env
+    restart: on-failure:3
+
+  ws-api:
+    container_name: di-dev-ws-api
+    build:
+      context: server/.
+      dockerfile: Dockerfile.dev
+    ports:
+      - 8002:80
     volumes:
       - ./server:/app
       - /var/run/docker.sock:/var/run/docker.sock

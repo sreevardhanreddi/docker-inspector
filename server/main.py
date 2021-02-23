@@ -26,7 +26,11 @@ app.add_middleware(
 
 @app.get("/app")
 def read_main(request: Request):
-    return {"message": "Hello World", "root_path": request.scope.get("root_path")}
+    return {
+        "message": "Hello World",
+        "root_path": request.scope.get("root_path"),
+        "urls": [{"path": route.path, "name": route.name} for route in app.routes],
+    }
 
 
 app.include_router(auth_router, prefix="/auth", tags=["user auth"])
