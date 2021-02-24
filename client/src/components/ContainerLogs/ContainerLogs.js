@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CircularProgress, Paper, Box, Typography } from "@material-ui/core";
 import { authAxios } from "../../utils/axiosUtils";
 import { useParams } from "react-router-dom";
@@ -6,13 +6,19 @@ import ReconnectingWebSocket from "reconnecting-websocket";
 
 const ContainerLogs = () => {
   const [logs, setLogs] = useState([]);
+  const logsEndRef = useRef(null);
 
   const params = useParams();
 
+  const scrollToBottom = () => {
+    logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
     // getInspectJSON();
-    const rws = new WebSocket(
-      `ws://${window.location.host}/ws/api/docker/ws/containers/logs/${params.containerName}/`
+    scrollToBottom();
+    const rws = new ReconnectingWebSocket(
+      `ws://${window.location.host}/api/docker/ws/containers/logs/${params.containerName}/`
     );
     rws.onopen = (e) => {
       console.log("on open", e);
@@ -32,8 +38,9 @@ const ContainerLogs = () => {
       });
       if (logs.length > 50) {
         setLogs([]);
-        return;
       }
+      scrollToBottom();
+      return;
     };
     return () => {
       rws.close();
@@ -46,11 +53,19 @@ const ContainerLogs = () => {
       <Box m={2} />
       {/* {logs.length} */}
       {/* <Typography>{logs}</Typography> */}
-      <Box style={{ height: "30vh", overflow: "auto" }}>
+      <Box
+        style={{
+          height: "30vh",
+          overflow: "auto",
+          backgroundColor: "black",
+          color: "white",
+        }}
+      >
         {logs.map((log, index) => {
           // console.log(log, index);
           return <Box key={index}>{log}</Box>;
         })}
+        <div ref={logsEndRef}></div>
       </Box>
     </>
   );
