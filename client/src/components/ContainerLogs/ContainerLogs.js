@@ -3,20 +3,19 @@ import { CircularProgress, Paper, Box, Typography } from "@material-ui/core";
 import { authAxios } from "../../utils/axiosUtils";
 import { useParams } from "react-router-dom";
 import ReconnectingWebSocket from "reconnecting-websocket";
+import { XTerm } from "xterm-for-react";
+import { FitAddon } from "xterm-addon-fit";
 
 const ContainerLogs = () => {
   const [logs, setLogs] = useState([]);
-  const logsEndRef = useRef(null);
+  const xtermRef = useRef(null);
 
   const params = useParams();
 
-  const scrollToBottom = () => {
-    logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  let fitAddon = new FitAddon();
 
   useEffect(() => {
-    // getInspectJSON();
-    scrollToBottom();
+    fitAddon.fit();
     const rws = new ReconnectingWebSocket(
       `ws://${window.location.host}/api/docker/ws/containers/logs/${params.containerName}/`
     );
@@ -33,13 +32,15 @@ const ContainerLogs = () => {
     rws.onmessage = (e) => {
       console.log("on message", e.data);
       let log = JSON.parse(e.data).log;
+      xtermRef?.current?.terminal.write(`${log}\r\n`);
+
       setLogs((logs) => {
         return [...logs, log];
       });
-      if (logs.length > 50) {
+      if (logs.length > 100) {
         setLogs([]);
       }
-      scrollToBottom();
+
       return;
     };
     return () => {
@@ -49,23 +50,10 @@ const ContainerLogs = () => {
 
   return (
     <>
-      <Typography variant="h5">Container Logs ({logs.length})</Typography>
+      <Typography variant="h5">Container Logs </Typography>
       <Box m={2} />
-      {/* {logs.length} */}
-      {/* <Typography>{logs}</Typography> */}
-      <Box
-        style={{
-          height: "30vh",
-          overflow: "auto",
-          backgroundColor: "black",
-          color: "white",
-        }}
-      >
-        {logs.map((log, index) => {
-          // console.log(log, index);
-          return <Box key={index}>{log}</Box>;
-        })}
-        <div ref={logsEndRef}></div>
+      <Box>
+        <XTerm ref={xtermRef} addons={[fitAddon]} onData={(e) => {}} />
       </Box>
     </>
   );

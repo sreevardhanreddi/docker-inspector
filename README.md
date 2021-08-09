@@ -1,5 +1,16 @@
 # Docker Inspector
 
+Docker Inspector is an application to manage and monitor docker containers running on a machine.
+
+Currently Available features are
+
+- View list of containers running.
+- View each container's running processes and logs.
+
+## ![containers list](./docs/containers_list.png)
+
+![containers list](./docs/container_top_and_logs.png)
+
 ## Stack
 
 - FAST API (with sqlalchemy as an **ORM**)
