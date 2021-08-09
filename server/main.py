@@ -12,6 +12,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.docker.views import docker_router
 from api.auth.views import auth_router
 
+from api.auth.middleware import has_access
+
+PROTECTED = [Depends(has_access)]
 
 app = FastAPI(root_path="/api")
 
@@ -34,4 +37,6 @@ def read_main(request: Request):
 
 
 app.include_router(auth_router, prefix="/auth", tags=["user auth"])
-app.include_router(docker_router, prefix="/docker", tags=["docker containers"])
+app.include_router(
+    docker_router, prefix="/docker", tags=["docker containers"], dependencies=PROTECTED
+)
