@@ -2,6 +2,7 @@ from typing import List, Optional
 from datetime import datetime
 from enum import Enum
 from pydantic import BaseModel
+from pydantic.networks import EmailStr
 
 
 class UserRoleEnum(str, Enum):
@@ -10,7 +11,7 @@ class UserRoleEnum(str, Enum):
 
 
 class UserCreate(BaseModel):
-    email: str
+    email: EmailStr
     password: str
     role: UserRoleEnum
 
@@ -18,18 +19,18 @@ class UserCreate(BaseModel):
 class UserToken(BaseModel):
     access_token: str
     token_type: str
-    email: str
+    email: EmailStr
     role: str
 
 
 class UserLogin(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 
 class UserData(BaseModel):
     id: int
-    email: str
+    email: EmailStr
     username: str
     created_at: datetime
     role: str

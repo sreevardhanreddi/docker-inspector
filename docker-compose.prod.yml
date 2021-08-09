@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   proxy:
-    container_name: di-prod-proxy
+    container_name: di-proxy
     build:
       context: proxy/.
       dockerfile: Dockerfile.prod
@@ -11,7 +11,7 @@ services:
     restart: on-failure:10
 
   api:
-    container_name: di-prod-api
+    container_name: di-api
     build:
       context: server/.
       dockerfile: Dockerfile.prod
@@ -29,7 +29,7 @@ services:
     restart: on-failure:10
 
   database:
-    container_name: di-prod-db
+    container_name: di-db
     build: database/.
     volumes:
       - ./database/db_data:/var/lib/postgresql
@@ -38,7 +38,7 @@ services:
     restart: on-failure:10
 
   client:
-    container_name: di-prod-ui
+    container_name: di-ui
     build:
       context: client/.
       dockerfile: Dockerfile.prod
