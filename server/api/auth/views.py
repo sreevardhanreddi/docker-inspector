@@ -17,6 +17,7 @@ from api.auth.auth_helpers import (
     create_user_in_db,
 )
 from api.auth.schema import UserCreate, UserData, UserToken, UserLogin
+from api.auth.middleware import has_access
 
 auth_router = APIRouter()
 
@@ -53,7 +54,7 @@ async def login_for_access_token(
     }
 
 
-@auth_router.get("/me/", response_model=UserData)
+@auth_router.get("/me/", response_model=UserData, dependencies=[Depends(has_access)])
 async def get_current_user(request: Request, db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
