@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from starlette.endpoints import WebSocketEndpoint
 from starlette.websockets import WebSocket
 from api.docker.utils.data_utils import DockerContainerParser
+from api.docker.schemas.docker import DockerContainerSchema, DockerContainerTopSchema
 
 docker_router = APIRouter()
 
@@ -15,7 +16,7 @@ client = docker.DockerClient(base_url="unix:///var/run/docker.sock")
 aio_docker_client = aiodocker.Docker()
 
 
-@docker_router.get("/containers/")
+@docker_router.get("/containers/", response_model=List[DockerContainerSchema])
 def containers():
     containers = client.containers.list(all=True)
     container_parser = DockerContainerParser()
@@ -23,7 +24,9 @@ def containers():
     return containers
 
 
-@docker_router.get("/containers/{container_name}/")
+@docker_router.get(
+    "/containers/{container_name}/", response_model=DockerContainerSchema
+)
 def container(container_name: str):
     containers = client.containers.list(all=True, filters={"name": container_name})
     if not containers:
@@ -43,7 +46,9 @@ def container_inspect_info(container_name: str):
     return container_info
 
 
-@docker_router.get("/containers/top/{container_name}/")
+@docker_router.get(
+    "/containers/top/{container_name}/", response_model=List[DockerContainerTopSchema]
+)
 def container_top_processes(container_name: str):
     containers = client.containers.list(all=True, filters={"name": container_name})
     if not containers:
